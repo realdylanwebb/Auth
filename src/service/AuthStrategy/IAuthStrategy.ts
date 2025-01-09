@@ -1,4 +1,3 @@
-
 export default interface IAuthStrategy {
     login(args: LoginArgs): Promise<LoginResponse>;
     register(args: RegisterArgs): Promise<RegisterResponse>;
