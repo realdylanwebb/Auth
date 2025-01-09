@@ -1,6 +1,6 @@
 export interface BaseAccount {
   type: string;
-  _id: string;
+  id: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,7 +22,7 @@ export interface OAuthAccount extends BaseAccount {
 export type Account = NativeAccount | OAuthAccount;
 
 export interface User {
-  _id: string;
+  id: string;
   email: string;
   emailVerified: boolean;
   roles: string[];
