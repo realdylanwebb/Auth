@@ -79,10 +79,10 @@ export function verifyToken<T extends object>(
     }
 }
 
-export function generateRefreshToken(): string {
-    return crypto.randomBytes(32).toString('hex');
-}
-
 export function generateCharacterToken(length: number): string {
     return crypto.randomBytes(length).toString('hex');
+}
+
+export function generateRefreshToken(): string {
+    return generateCharacterToken(32);
 }
