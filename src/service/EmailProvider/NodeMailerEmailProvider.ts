@@ -1,12 +1,12 @@
 import Mail from "nodemailer/lib/mailer";
-import NodeMailerProvider from "../../provider/NodeMailerProvider";
+import NodeMailerTransport from "../../transport/NodeMailerTransport";
 import IEmailProvider from "./IEmailProvider";
 import { SendVerificationEmailArgs, SendPasswordResetEmailArgs } from "./types";
 
 export default class NodeMailerEmailProvider implements IEmailProvider {
 
     async sendVerificationEmail(args: SendVerificationEmailArgs): Promise<void> {
-        const transporter = await NodeMailerProvider.getTransporter();
+        const transporter = await NodeMailerTransport.getTransporter();
         const { email, userId, token } = args;
         const verificationUrl = `http://localhost:3000/verify-email?token=${token}&userId=${userId}`;
         const html = `<p>Click <a href="${verificationUrl}">here</a> to verify your email.</p>`;
@@ -21,7 +21,7 @@ export default class NodeMailerEmailProvider implements IEmailProvider {
 
     async sendPasswordResetEmail(args: SendPasswordResetEmailArgs): Promise<void> {
         const { email, userId, token } = args;
-        const transporter = await NodeMailerProvider.getTransporter();
+        const transporter = await NodeMailerTransport.getTransporter();
         const resetUrl = `http://localhost:3000/reset-password?token=${token}&userId=${userId}`;
         const html = `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`;
         const mailOptions: Mail.Options = {

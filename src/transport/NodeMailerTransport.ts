@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-export default class NodeMailerProvider {
+export default class NodeMailerTransport {
     private static transporter: nodemailer.Transporter | null = null;
 
     private constructor() {}
