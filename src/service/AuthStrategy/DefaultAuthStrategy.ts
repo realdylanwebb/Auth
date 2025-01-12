@@ -1,11 +1,10 @@
 import {
   generateAccessToken,
   generateRefreshToken,
-  generateToken,
+  verifyAccessToken,
 } from "../../TokenService";
-import { Token } from "../../types/token";
-import { NativeAccount, User } from "../../types/user";
 import { hashPassword } from "../../util/password";
+import accessTokenBlacklistFactory from "../AccessTokenBlackList/AccessTokenBlacklistFactory";
 import authStoreFactory from "../AuthStore/AuthStoreFactory";
 import refreshStoreFactory from "../RefreshStore/RefreshStoreFactory";
 import IAuthStrategy from "./IAuthStrategy";
@@ -51,15 +50,59 @@ export default class DefaultAuthStrategy implements IAuthStrategy {
   }
 
   async userDetails(args: UserDetailsArgs): Promise<UserDetailsResponse> {
-    throw new Error("Method not implemented.");
+    const { token } = args;
+    const payload = verifyAccessToken(token);
+
+    const user = await authStoreFactory().getUserById(payload.user.id);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      roles: user.roles,
+    };
   }
 
   async refreshToken(args: RefreshTokenArgs): Promise<RefreshTokenResponse> {
-    throw new Error("Method not implemented.");
+    const { refreshToken } = args;
+
+    const userId = await refreshStoreFactory().getUserByRefreshToken(
+      refreshToken
+    );
+
+    if (!userId) {
+      throw new Error("Invalid refresh token");
+    }
+
+    const user = await authStoreFactory().getUserById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const token = generateAccessToken({
+      _id: user.id,
+      user: {
+        id: user.id,
+        email: user.email,
+        roles: user.roles,
+      },
+    });
+
+    return {
+      token,
+    };
   }
 
-  async logout(args: LogoutArgs): Promise<LogoutResponse> {
-    throw new Error("Method not implemented.");
+  async logout(args: LogoutArgs): Promise<void> {
+    const { accessToken, refreshToken } = args;
+
+    await refreshStoreFactory().deleteRefreshToken(refreshToken);
+    await accessTokenBlacklistFactory().addAccessToken(accessToken);
   }
 
   async login(args: LoginArgs): Promise<LoginResponse> {

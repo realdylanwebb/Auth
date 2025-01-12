@@ -43,10 +43,6 @@ export interface LogoutArgs {
   accessToken: string;
 }
 
-export interface LogoutResponse {
-  message: string;
-}
-
 export interface ForgotPasswordArgs {
   email: string;
 }

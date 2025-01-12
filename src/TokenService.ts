@@ -80,6 +80,19 @@ export function verifyToken<T extends object>(
   }
 }
 
+const accessTokenPayloadSchema = z.object({
+  _id: z.string(),
+  user: z.object({
+    id: z.string(),
+    email: z.string(),
+    roles: z.array(z.string()),
+  }),
+});
+
+export function verifyAccessToken(token: string): AccessTokenPayload {
+  return verifyToken(token, accessTokenPayloadSchema);
+}
+
 export function generateCharacterToken(length: number): string {
   return crypto.randomBytes(length).toString("hex");
 }

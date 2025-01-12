@@ -24,6 +24,7 @@ export type Account = NativeAccount | OAuthAccount;
 export interface User {
   id: string;
   email: string;
+  name: string;
   emailVerified: boolean;
   roles: string[];
   accounts: Account[];
