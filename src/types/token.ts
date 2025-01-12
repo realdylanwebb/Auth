@@ -1,12 +1,14 @@
-export interface Token {
+export interface AccessToken extends AccessTokenPayload {
+  expiresAt: Date;
+  isRevoked: boolean;
+  createdAt: Date;
+}
+
+export interface AccessTokenPayload {
   _id: string;
-  token: string;
   user: {
     id: string;
     email: string;
     roles: string[];
   };
-  expiresAt: Date;
-  isRevoked: boolean;
-  createdAt: Date;
 }
