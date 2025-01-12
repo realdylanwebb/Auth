@@ -18,7 +18,6 @@ import {
   RefreshTokenArgs,
   RefreshTokenResponse,
   LogoutArgs,
-  LogoutResponse,
 } from "./types";
 
 export default class DefaultAuthStrategy implements IAuthStrategy {
